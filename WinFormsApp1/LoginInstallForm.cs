@@ -154,16 +154,25 @@ namespace WinFormsApp1
             }
 
 
-            PBKDF2KeyGen KeyGenerator = new PBKDF2KeyGen(this.textBoxPassword.Text, this.textBoxUsername.Text);
+            try
+            {
+                PBKDF2KeyGen KeyGenerator = new PBKDF2KeyGen(this.textBoxPassword.Text, this.textBoxUsername.Text);
 
-            AESVaultEncryptor Cryptor = new AESVaultEncryptor(KeyGenerator.DeriveKey());
+                AESVaultEncryptor Cryptor = new AESVaultEncryptor(KeyGenerator.DeriveKey());
 
-            //try
-            //{
-            VaultDataFileManager Existing = new VaultDataFileManager(Program.ExePath + this.selectVault.Text, Cryptor);
 
-            Program.Cryptor = Cryptor;
-            Program.Vault = Existing;
+                //try
+                //{
+                VaultDataFileManager Existing = new VaultDataFileManager(Program.ExePath + this.selectVault.Text, Cryptor);
+
+                Program.Cryptor = Cryptor;
+                Program.Vault = Existing;
+            } catch (Exception ex)
+            {
+                MessageBox.Show("Wrong username or password, please try again");
+                this.textBoxPassword.Text = String.Empty;
+                return;
+            }
 
             this.Close();
             //}
